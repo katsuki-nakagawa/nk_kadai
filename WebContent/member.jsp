@@ -54,22 +54,39 @@
 	String disp_user_pass = "";
 	String disp_name = "";
 	String disp_age = "";
+	String disp_sex = "";
 	String disp_seibetu_num = "";
 
 	if (request.getAttribute("disp_user_id") != null) {
 		disp_user_id = request.getAttribute("disp_user_id").toString();
+	}else{
+		disp_user_id = "";
 	}
 	if(request.getAttribute("disp_user_pass") != null){
 		disp_user_pass = request.getAttribute("disp_user_pass").toString();
+	}else{
+		disp_user_pass = "";
 	}
 	if(request.getAttribute("disp_name") != null){
 		disp_name = request.getAttribute("disp_name").toString();
+	}else{
+		disp_name = "";
 	}
-	if(request.getAttribute("err_age") != null){
-		err_age = request.getAttribute("err_age").toString();
+	if(request.getAttribute("disp_age") != null){
+		err_age = request.getAttribute("disp_age").toString();
+	}else{
+		disp_age = "";
 	}
-	if(request.getAttribute("disp_seibetu_num") != null){
+ 	if(request.getAttribute("disp__sex") != null){
+		disp_seibetu_num = request.getAttribute("disp__sex").toString();
+	}else{
+		disp_seibetu_num ="";
+	}
+
+ 	if(request.getAttribute("disp_seibetu_num") != null){
 		disp_seibetu_num = request.getAttribute("disp_seibetu_num").toString();
+	}else{
+		disp_seibetu_num ="";
 	}
 
 %>
@@ -94,35 +111,37 @@
 	<form action="./Member" method="post">
 		<h1>会員登録</h1>
 		<div>
-			<label for="login_user">ログインユーザーID</label> <br> <input
-				type="text" required name="login_user" placeholder="ユーザーID"
-				value=<%=err_user_id%>><%=err_user_id%>
+			<label for="login_user">ログインユーザーID</label> <br>
+			 <input
+				type="text" required name="login_user"
+				value=<%=disp_user_id%>><%=err_user_id%>
 		</div>
 		<p>
 		<div>
 			<label for="login_pass">パスワード</label> <br> <input type="text"
-				required name="login_pass" placeholder="パスワード"><%=err_user_id%>
+				required name="login_pass" value=<%=disp_user_pass%>><%=err_user_pass%>
 		</div>
 		<p>
 		<div>
 			<label for="name">氏名</label> <br> <input type="text" required
-				name="name" placeholder="（例）山田花子"><%=err_user_id%>
+				name="name"  value=<%=disp_name%>><%=err_name%>
 		</div>
 		<p>
 		<div>
-			<label for="age">年齢</label> <br> <input type="text" required
-				name="age" placeholder="（例）20"><%=err_user_id%>
+			<label for="age">年齢</label> <br>
+			<input type="text" required name="age" value=<%=disp_age%>><%=err_age%>
 		</div>
 		<p>
 		<div>
-			<label for="sex">性別</label> <br> <select id="Select" name="sex"
+			<label for="sex">性別</label> <br>
+			<select id="Select" name="sex"
 				onchange="SelectChenge();">
 				<option></option>
 				<option value="0">男性</option>
 				<option value="1">女性</option>
 				<option value="2">カスタム</option>
-			</select> <input type="text" id="input" name="gender" style="display: none"
-				placeholder="おかま">
+			</select>
+			<input type="text" required id="input" name="gender" style="display: none" value=<%=disp_sex%>><%=err_sex%>>
 
 
 		</div>

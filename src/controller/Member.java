@@ -71,8 +71,15 @@ public class Member extends HttpServlet {
 		String in_sex = "";
 		String in_gender = "";
 
-		boolean isError = false;
-		//boolean flg = false;
+		boolean flg = true;
+		//boolean isError = false;
+		boolean idError = false;
+		boolean passError = false;
+		boolean nameError = false;
+		boolean ageError = false;
+		boolean sexError = false;
+		//boolean genderError = false;
+
 
 		// 呼び出し元Jspからデータ受け取り
 		login_user_id = request.getParameter("login_user");
@@ -93,86 +100,68 @@ public class Member extends HttpServlet {
 		// ログインユーザーID確認
 		if (!p4.matcher(login_user_id).find() && p6.matcher(login_user_id).find()) {
 			request.setAttribute("res_user_id", login_user_id);
-			isError = true;
+			idError = true;
 		} else {
 			request.setAttribute("err_user_id", id_err);
-			isError = false;
+			idError = false;
 
 		}
 
 		// ログインユーザーパスワード確認
 		if (!p4.matcher(login_user_pass).find() && p6.matcher(login_user_pass).find()) {
 			request.setAttribute("res_user_pass", login_user_pass);
-			isError = true;
+			passError = true;
 		} else {
 			request.setAttribute("err_user_pass", pass_err);
-			isError = false;
+			passError = false;
 		}
 
 		// 氏名正規表現をしてJspに渡データセット
 		//if (p3.matcher(in_name).find() && p4.matcher(in_name).find() && StringUtils.isEmpty(in_name) == flg) {
 			if (p3.matcher(in_name).find() && p4.matcher(in_name).find()) {
 			request.setAttribute("err_name", name_err);
-			isError = false;
+			nameError = false;
 		} else {
 			request.setAttribute("res_name", in_name);
-			isError = true;
+			nameError = true;
 		}
 
 		// 年齢正規表現をしてJspに渡データセット
 		//if (p1.matcher(in_age).find() && p2.matcher(in_age).find() && StringUtils.isEmpty(in_age) != flg) {
 			if (p1.matcher(in_age).find() && p2.matcher(in_age).find()) {
 			request.setAttribute("res_age", in_age);
-			isError = true;
+			ageError = true;
 		} else {
 			request.setAttribute("err_age", age_err);
-			isError = false;
+			ageError = false;
 		}
 
 		//性別セレクト
 		if (in_sex.equals("0")) {
 			request.setAttribute("res_sex", "男性");
-			isError = true;
+			sexError = true;
 		} else if (in_sex.equals("1")) {
 			request.setAttribute("res_sex", "女性");
-			isError = true;
+			sexError = true;
 		} else if (in_sex.equals("2")) {
 			request.setAttribute("res_sex", in_gender);
-			isError = true;
+			sexError = true;
 		} else {
 			request.setAttribute("err_sex", sex_err);
-			isError = false;
+			sexError = false;
 		}
 		request.setAttribute("seibetu_num", in_sex);
 
 		// confirm.jsp にページ遷移
-/*		if (isError == true) {
+		if (idError == flg && passError == flg && nameError == flg && ageError == flg && sexError == flg) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("confirm.jsp");
 			dispatch.forward(request, response);
 		} else {
 			RequestDispatcher dispatch = request.getRequestDispatcher("member.jsp");
 			dispatch.forward(request, response);
-		}*/
-
-		if (isError) {
-
-			//エラー発生。会員登録に戻す
-			RequestDispatcher dispatch = request.getRequestDispatcher("member.jsp");
-			if (dispatch != null) {
-				dispatch.forward(request, response);
-			} else {
-				System.out.println("エラーが発生しました。");
-			}
-		} else {
-
-			// 確認画面に遷移
-			RequestDispatcher dispatch = request.getRequestDispatcher("confirm.jsp");
-			if (dispatch != null) {
-				dispatch.forward(request, response);
-			} else {
-				System.out.println("エラーが発生しました。");
-			}
 		}
+
+
 	}
 
 }
