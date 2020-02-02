@@ -54,39 +54,39 @@
 	String disp_user_pass = "";
 	String disp_name = "";
 	String disp_age = "";
-	String disp_sex = "";
 	String disp_seibetu_num = "";
+	String disp_gender ="";
 
-	if (request.getAttribute("disp_user_id") != null) {
-		disp_user_id = request.getAttribute("disp_user_id").toString();
+	if (request.getAttribute("res_user_id") != null) {
+		disp_user_id = request.getAttribute("res_user_id").toString();
 	}else{
 		disp_user_id = "";
 	}
-	if(request.getAttribute("disp_user_pass") != null){
-		disp_user_pass = request.getAttribute("disp_user_pass").toString();
+	if(request.getAttribute("res_user_pass") != null){
+		disp_user_pass = request.getAttribute("res_user_pass").toString();
 	}else{
 		disp_user_pass = "";
 	}
-	if(request.getAttribute("disp_name") != null){
-		disp_name = request.getAttribute("disp_name").toString();
+	if(request.getAttribute("res_name") != null){
+		disp_name = request.getAttribute("res_name").toString();
 	}else{
 		disp_name = "";
 	}
-	if(request.getAttribute("disp_age") != null){
-		err_age = request.getAttribute("disp_age").toString();
+	if(request.getAttribute("res_age") != null){
+		disp_age = request.getAttribute("res_age").toString();
 	}else{
 		disp_age = "";
 	}
- 	if(request.getAttribute("disp__sex") != null){
-		disp_seibetu_num = request.getAttribute("disp__sex").toString();
+ 	if(request.getAttribute("seibetu_num") != null){
+		disp_seibetu_num = request.getAttribute("seibetu_num").toString();
 	}else{
 		disp_seibetu_num ="";
 	}
 
- 	if(request.getAttribute("disp_seibetu_num") != null){
-		disp_seibetu_num = request.getAttribute("disp_seibetu_num").toString();
+ 	if(request.getAttribute("in_gender") != null){
+		disp_gender = request.getAttribute("in_gender").toString();
 	}else{
-		disp_seibetu_num ="";
+		disp_gender ="";
 	}
 
 %>
@@ -100,6 +100,10 @@
 			document.getElementById("input").style.display = "none";
 		}
 	}
+
+	 window.onload=function(){
+		  document.getElementById("Select").value=<%=disp_seibetu_num%>;
+		};
 </script>
 
 </head>
@@ -141,7 +145,7 @@
 				<option value="1">女性</option>
 				<option value="2">カスタム</option>
 			</select>
-			<input type="text" required id="input" name="gender" style="display: none" value=<%=disp_sex%>><%=err_sex%>>
+			<input type="text" id="input" name="gender" style="display: none" value=<%=disp_gender%>><%=err_sex%>
 
 
 		</div>

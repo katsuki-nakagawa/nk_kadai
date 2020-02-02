@@ -72,7 +72,6 @@ public class Member extends HttpServlet {
 		String in_gender = "";
 
 		boolean flg = true;
-		//boolean isError = false;
 		boolean idError = false;
 		boolean passError = false;
 		boolean nameError = false;
@@ -102,6 +101,7 @@ public class Member extends HttpServlet {
 			request.setAttribute("res_user_id", login_user_id);
 			idError = true;
 		} else {
+			request.setAttribute("res_user_id", login_user_id);
 			request.setAttribute("err_user_id", id_err);
 			idError = false;
 
@@ -112,26 +112,30 @@ public class Member extends HttpServlet {
 			request.setAttribute("res_user_pass", login_user_pass);
 			passError = true;
 		} else {
+			request.setAttribute("res_user_pass", login_user_pass);
 			request.setAttribute("err_user_pass", pass_err);
 			passError = false;
 		}
 
 		// 氏名正規表現をしてJspに渡データセット
-		//if (p3.matcher(in_name).find() && p4.matcher(in_name).find() && StringUtils.isEmpty(in_name) == flg) {
-			if (p3.matcher(in_name).find() && p4.matcher(in_name).find()) {
+		if (p3.matcher(in_name).find() && p4.matcher(in_name).find() && StringUtils.isEmpty(in_name) == flg) {
+//			if (p3.matcher(in_name).find() && p4.matcher(in_name).find()) {
+			request.setAttribute("res_name", in_name);
 			request.setAttribute("err_name", name_err);
 			nameError = false;
 		} else {
 			request.setAttribute("res_name", in_name);
 			nameError = true;
 		}
+		//ああああ
 
 		// 年齢正規表現をしてJspに渡データセット
-		//if (p1.matcher(in_age).find() && p2.matcher(in_age).find() && StringUtils.isEmpty(in_age) != flg) {
-			if (p1.matcher(in_age).find() && p2.matcher(in_age).find()) {
+		if (p1.matcher(in_age).find() && p2.matcher(in_age).find() && StringUtils.isEmpty(in_age) != flg) {
+//			if (p1.matcher(in_age).find() && p2.matcher(in_age).find()) {
 			request.setAttribute("res_age", in_age);
 			ageError = true;
 		} else {
+			request.setAttribute("res_age", in_age);
 			request.setAttribute("err_age", age_err);
 			ageError = false;
 		}
@@ -147,6 +151,7 @@ public class Member extends HttpServlet {
 			request.setAttribute("res_sex", in_gender);
 			sexError = true;
 		} else {
+			request.setAttribute("res_sex", sex_err);
 			request.setAttribute("err_sex", sex_err);
 			sexError = false;
 		}
