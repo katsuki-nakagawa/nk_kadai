@@ -1,6 +1,10 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
@@ -46,6 +50,9 @@ public class Member extends HttpServlet {
 		System.out.println("Postでリクエストされた");
 		request.setCharacterEncoding("UTF8");
 
+
+
+
 		//エラーメッセージ
 		String id_err = "IDを正しく入力してください";
 		String pass_err = "パスワードを正しく入力してください";
@@ -77,6 +84,8 @@ public class Member extends HttpServlet {
 		boolean nameError = false;
 		boolean ageError = false;
 		boolean sexError = false;
+
+		boolean exists_user = true;
 		//boolean genderError = false;
 
 
@@ -89,12 +98,73 @@ public class Member extends HttpServlet {
 		in_sex = request.getParameter("sex");
 		in_gender = request.getParameter("gender");
 
-		StringUtils.isEmpty(in_name);
-		StringUtils.isEmpty(in_age);
-		StringUtils.isEmpty(in_sex);
+
+		// ユーザーID重複チェック
+		boolean existenceCheck = false;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rset = null;
+		try {
+			// MySQLドライバをロード
+			Class.forName("com.mysql.jdbc.Driver");
+
+			// MySQLデータベースに接続
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sql_study?user=root&password=");
+
+			// ステートメントを作成
+			stmt = conn.createStatement();
+
+			// クエリ生成
+			StringBuilder sb = new StringBuilder();
+			sb.append("SELECT id_login_user ");
+			sb.append("FROM m_user ");
+			sb.append("WHERE id_login_user = '" + login_user_id + "'");
+			String sql = sb.toString();
+			System.out.println("SQL:" + sql);
+
+			// SQL発行
+			rset = stmt.executeQuery(sql);
+
+			// 取得レコード数分、処理を繰り返しログインチェックを行う
+			while (rset.next()) {
+				if (login_user_id.equals(rset.getString(1))) {
+//					if (login_user_id.equals(rset.getString(1))) {
+					existenceCheck = true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// 結果セットをクローズ
+				if (!rset.isClosed()) {
+					rset.close();
+				}
+
+				// ステートメントをクローズ
+				if (!stmt.isClosed()) {
+					stmt.close();
+				}
+
+				// 接続をクローズ
+				if (!conn.isClosed()) {
+					conn.close();
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+
+		if(existenceCheck) {
+			request.setAttribute("exists_user", "すでに登録されています！！");
+			 exists_user = false;
+			System.out.println("登録されてる");
+
+		}
 
 		/**
-		 * 結果結果飛ばす
+		 * 結果飛ばす
 		 */
 		// ログインユーザーID確認
 		if (!p4.matcher(login_user_id).find() && p6.matcher(login_user_id).find()) {
@@ -127,7 +197,7 @@ public class Member extends HttpServlet {
 			request.setAttribute("res_name", in_name);
 			nameError = true;
 		}
-		//ああああ
+
 
 		// 年齢正規表現をしてJspに渡データセット
 		if (p1.matcher(in_age).find() && p2.matcher(in_age).find() && StringUtils.isEmpty(in_age) != flg) {
@@ -148,8 +218,14 @@ public class Member extends HttpServlet {
 			request.setAttribute("res_sex", "女性");
 			sexError = true;
 		} else if (in_sex.equals("2")) {
-			request.setAttribute("res_sex", in_gender);
-			sexError = true;
+			if(!StringUtils.isEmpty(in_gender)) {
+				request.setAttribute("res_sex", in_gender);
+				sexError = true;
+			}else {
+				request.setAttribute("err_sex", "入力してください！！");
+				sexError = false;
+			}
+
 		} else {
 			request.setAttribute("res_sex", sex_err);
 			request.setAttribute("err_sex", sex_err);
@@ -158,7 +234,7 @@ public class Member extends HttpServlet {
 		request.setAttribute("seibetu_num", in_sex);
 
 		// confirm.jsp にページ遷移
-		if (idError == flg && passError == flg && nameError == flg && ageError == flg && sexError == flg) {
+		if (exists_user == flg && idError == flg && passError == flg && nameError == flg && ageError == flg && sexError == flg) {
 			RequestDispatcher dispatch = request.getRequestDispatcher("confirm.jsp");
 			dispatch.forward(request, response);
 		} else {

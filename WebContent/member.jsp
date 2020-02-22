@@ -31,30 +31,50 @@
 	String err_name = "";
 	String err_age = "";
 	String err_sex = "";
+	String exists_user = "";
+	boolean flg = false;
+	boolean user_flg= false;
+	boolean user_id = false;
+	boolean user_pass = false;
+	boolean name = false;
+	boolean age = false;
+	boolean sex = false;
+	String disp_seibetu_num = "";
 
+	if (request.getAttribute("exists_user") != null) {
+		err_user_id = request.getAttribute("exists_user").toString();
+		user_flg= false;
+	}
 	if (request.getAttribute("err_user_id") != null) {
 		err_user_id = request.getAttribute("err_user_id").toString();
+		user_id = false;
 	}
 	if(request.getAttribute("err_user_pass") != null){
 		err_user_pass = request.getAttribute("err_user_pass").toString();
+		user_pass = false;
 	}
 	if(request.getAttribute("err_name") != null){
 		err_name = request.getAttribute("err_name").toString();
+		name = false;
 	}
 	if(request.getAttribute("err_age") != null){
 		err_age = request.getAttribute("err_age").toString();
+		age = false;
 	}
 	if(request.getAttribute("err_sex") != null){
 		err_sex = request.getAttribute("err_sex").toString();
+		sex = false;
 	}
-%>
+	%>
+
+
 
 <%
 	String disp_user_id = "";
 	String disp_user_pass = "";
 	String disp_name = "";
 	String disp_age = "";
-	String disp_seibetu_num = "";
+	//String disp_seibetu_num = "";
 	String disp_gender ="";
 
 	if (request.getAttribute("res_user_id") != null) {
@@ -83,8 +103,8 @@
 		disp_seibetu_num ="";
 	}
 
- 	if(request.getAttribute("in_gender") != null){
-		disp_gender = request.getAttribute("in_gender").toString();
+ 	if(request.getAttribute("res_sex") != null){
+		disp_gender = request.getAttribute("res_sex").toString();
 	}else{
 		disp_gender ="";
 	}
@@ -99,12 +119,44 @@
 		} else {
 			document.getElementById("input").style.display = "none";
 		}
-	}
 
-	 window.onload=function(){
+	}
+	</script>
+<%
+	if (user_flg == flg ||
+			user_id == flg ||
+			user_id == flg ||
+			user_pass == flg ||
+			name == flg ||
+			age == flg ||
+			sex == flg) {
+%>
+<script type="text/javascript">
+	function SelectChenge() {
+		var val = document.getElementById("Select").selectedIndex;
+		if (val == "3") {
+			document.getElementById("input").style.display = "inline";
+		} else {
+			document.getElementById("input").style.display = "none";
+		}
+
+	}
+ 	window.onload=function(){
+ 		var val= "<%=disp_gender%>";
 		  document.getElementById("Select").value=<%=disp_seibetu_num%>;
+		  document.getElementById("input").style.display = "inline";
+		  if(val != ""){
+				 document.getElementById("input").value=val;
+		  }
+
 		};
 </script>
+<%	} %>
+
+<%--  	window.onload=function(){
+		  document.getElementById("Select").value=<%=disp_seibetu_num%>;
+		}; --%>
+
 
 </head>
 <body>
@@ -115,10 +167,10 @@
 	<form action="./Member" method="post">
 		<h1>会員登録</h1>
 		<div>
-			<label for="login_user">ログインユーザーID</label> <br>
+			<label for="login_user">ログインユーザーID</label><br>
 			 <input
 				type="text" required name="login_user"
-				value=<%=disp_user_id%>><%=err_user_id%>
+				value=<%=disp_user_id%>><%=err_user_id%><%=exists_user%>
 		</div>
 		<p>
 		<div>
@@ -145,7 +197,7 @@
 				<option value="1">女性</option>
 				<option value="2">カスタム</option>
 			</select>
-			<input type="text" id="input" name="gender" style="display: none" value=<%=disp_gender%>><%=err_sex%>
+			<input type="text" id="input" name="gender" style="display: none" value=<%=disp_gender%> ><%=err_sex%>
 
 
 		</div>
