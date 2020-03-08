@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import constants.SystemConst;
+
 /**
  * Servlet implementation class Login
  */
@@ -58,7 +60,7 @@ public class Login extends HttpServlet {
 			Class.forName("com.mysql.jdbc.Driver");
 
 			// MySQLデータベースに接続
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sql_study?user=root&password=");
+			conn = DriverManager.getConnection(SystemConst.DB_CON_STR);
 
 			// ステートメントを作成
 			stmt = conn.createStatement();
