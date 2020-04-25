@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import constants.SystemConst;
+import entity.User;
 
 /**
  * Servlet implementation class Login
@@ -46,16 +49,19 @@ public class Login extends HttpServlet {
         System.out.println("Postでリクエストされた");
         request.setCharacterEncoding("UTF8");
 
+
+
         // 呼び出し元Jspからデータ受け取り
 		String in_ID = request.getParameter("id");
 		String in_PASS = request.getParameter("pass");
-		//String error_msg = request.getParameter("エラー");
 
 		boolean isLogin = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rset = null;
 		try {
+			List<User> userList = new ArrayList<User>();
+
 			// MySQLドライバをロード
 			Class.forName("com.mysql.jdbc.Driver");
 
@@ -76,13 +82,30 @@ public class Login extends HttpServlet {
 			// SQL発行
 			rset = stmt.executeQuery(sql);
 
-			// 取得レコード数分、処理を繰り返しログインチェックを行う
+			//Enttyに格納
 			while (rset.next()) {
+			    User user = new User();
+			    user.setIdLoginUser(rset.getString(1));
+			    user.setPassword(rset.getString(2));
+
+			    userList.add(user);
+			}
+			//Enttyからろぐいんチェック
+			for (User uid : userList) {
+				if (in_ID != null && in_PASS != null
+						&& in_ID.equals(uid.getIdLoginUser()) && in_PASS.equals(uid.getPassword())) {
+					isLogin = true;
+				}
+			}
+
+			// 取得レコード数分、処理を繰り返しログインチェックを行う
+/*			while (rset.next()) {
+
 				if (in_ID != null && in_PASS != null
 						&& in_ID.equals(rset.getString(1)) && in_PASS.equals(rset.getString(2))) {
 					isLogin = true;
 				}
-			}
+			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -115,6 +138,7 @@ public class Login extends HttpServlet {
 			System.out.println("エラー");
 		}
 		**/
+
 
 		// ログインチェック
 		if (isLogin) {
